@@ -10,7 +10,7 @@ function tomorrow(hoursAhead = 1) {
   d.setHours(d.getHours() + hoursAhead);
   return d.toISOString();
 }
- 
+
 function plusMinutes(iso: string, minutes: number) {
   return new Date(new Date(iso).getTime() + minutes * 60_000).toISOString();
 }
@@ -26,9 +26,13 @@ describe('Popcorn‑Palace E2E (Jest/Supertest)', () => {
   let showtimeId: number;
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
     app = moduleRef.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+    );
     await app.init();
     server = app.getHttpServer();
   });
@@ -116,7 +120,13 @@ describe('Popcorn‑Palace E2E (Jest/Supertest)', () => {
 
     await request(server)
       .post('/showtimes')
-      .send({ movieId, theater: 'Hall‑A', price: 30, startTime: start, endTime: end })
+      .send({
+        movieId,
+        theater: 'Hall‑A',
+        price: 30,
+        startTime: start,
+        endTime: end,
+      })
       .expect(400);
   });
 
@@ -127,13 +137,21 @@ describe('Popcorn‑Palace E2E (Jest/Supertest)', () => {
 
     await request(server)
       .post('/showtimes')
-      .send({ movieId, theater: 'Hall‑A', price: 30, startTime: start, endTime: end })
+      .send({
+        movieId,
+        theater: 'Hall‑A',
+        price: 30,
+        startTime: start,
+        endTime: end,
+      })
       .expect(409);
   });
 
   // 8. Get showtime by id --------------------------------------------------
   it('fetches showtime by id', async () => {
-    const res = await request(server).get(`/showtimes/${showtimeId}`).expect(200);
+    const res = await request(server)
+      .get(`/showtimes/${showtimeId}`)
+      .expect(200);
     expect(res.body.id).toBe(showtimeId);
   });
 
@@ -166,11 +184,17 @@ describe('Popcorn‑Palace E2E (Jest/Supertest)', () => {
   // 12. Book ticket – showtime ended -------------------------------------
   it('rejects booking for past showtime', async () => {
     // create a past showtime first
-    const pastEnd   = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-  const pastStart = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
+    const pastEnd = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const pastStart = new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString();
     const past = await request(server)
       .post('/showtimes')
-      .send({ movieId, theater: 'Hall‑B', price: 25, startTime: pastStart, endTime: pastEnd })
+      .send({
+        movieId,
+        theater: 'Hall‑B',
+        price: 25,
+        startTime: pastStart,
+        endTime: pastEnd,
+      })
       .expect(200);
 
     await request(server)

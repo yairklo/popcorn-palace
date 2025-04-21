@@ -25,7 +25,9 @@ export class TicketsService {
       id: ticket.showtimeId,
     });
     if (!showtime) {
-      throw new NotFoundException(`Showtime with ID ${ticket.showtimeId} not found`);
+      throw new NotFoundException(
+        `Showtime with ID ${ticket.showtimeId} not found`,
+      );
     }
     const exists = await this.TicketRepository.findOne({
       where: {

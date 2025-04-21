@@ -1,4 +1,9 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Movie } from './entities/movie.entity';
@@ -50,9 +55,9 @@ export class MoviesService {
 
   async remove(id: string) {
     const parsedId = Number(id);
-  if (isNaN(parsedId)) {
-    throw new BadRequestException(`Invalid ID: ${id}`);
-  }
+    if (isNaN(parsedId)) {
+      throw new BadRequestException(`Invalid ID: ${id}`);
+    }
     const exists = await this.movieRepository.findOneBy({ id: parsedId });
     if (!exists) {
       throw new NotFoundException(`Movie with ID ${id} not found`);

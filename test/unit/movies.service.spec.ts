@@ -1,4 +1,8 @@
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -7,16 +11,16 @@ import { MoviesService } from 'src/movies/movies.service';
 import { Movie } from 'src/movies/entities/movie.entity';
 
 const mockRepo = () => ({
-  find:            jest.fn(),
-  findOneBy:       jest.fn(),
-  create:          jest.fn(),
-  save:            jest.fn(),
-  delete:          jest.fn(),
+  find: jest.fn(),
+  findOneBy: jest.fn(),
+  create: jest.fn(),
+  save: jest.fn(),
+  delete: jest.fn(),
 });
 
 describe('MoviesService (unit)', () => {
   let service: MoviesService;
-  let repo:     jest.Mocked<Repository<Movie>>;
+  let repo: jest.Mocked<Repository<Movie>>;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -27,7 +31,7 @@ describe('MoviesService (unit)', () => {
     }).compile();
 
     service = module.get(MoviesService);
-    repo    = module.get(getRepositoryToken(Movie));
+    repo = module.get(getRepositoryToken(Movie));
   });
 
   afterEach(() => jest.clearAllMocks());
@@ -46,9 +50,9 @@ describe('MoviesService (unit)', () => {
 
   describe('create()', () => {
     it('creates movie when title unique & year valid', async () => {
-      repo.findOneBy.mockResolvedValueOnce(null);   // title uniqueness
-      repo.create   .mockReturnValueOnce(sampleMovie);
-      repo.save     .mockResolvedValueOnce(sampleMovie);
+      repo.findOneBy.mockResolvedValueOnce(null); // title uniqueness
+      repo.create.mockReturnValueOnce(sampleMovie);
+      repo.save.mockResolvedValueOnce(sampleMovie);
 
       const res = await service.create(sampleMovie);
       expect(res).toEqual(sampleMovie);
@@ -57,15 +61,20 @@ describe('MoviesService (unit)', () => {
 
     it('throws ConflictException on duplicate title', async () => {
       repo.findOneBy.mockResolvedValueOnce(sampleMovie); // title exists
-      await expect(service.create(sampleMovie))
-        .rejects.toBeInstanceOf(ConflictException);
+      await expect(service.create(sampleMovie)).rejects.toBeInstanceOf(
+        ConflictException,
+      );
     });
 
     it('throws BadRequest on future releaseYear', async () => {
-      const future = { ...sampleMovie, releaseYear: new Date().getFullYear() + 10 };
+      const future = {
+        ...sampleMovie,
+        releaseYear: new Date().getFullYear() + 10,
+      };
       repo.findOneBy.mockResolvedValueOnce(null);
-      await expect(service.create(future))
-        .rejects.toBeInstanceOf(BadRequestException);
+      await expect(service.create(future)).rejects.toBeInstanceOf(
+        BadRequestException,
+      );
     });
   });
 
@@ -74,9 +83,9 @@ describe('MoviesService (unit)', () => {
       // 1) find by old title
       repo.findOneBy
         .mockResolvedValueOnce(sampleMovie)
-      // 2) find by id   (inside update())
+        // 2) find by id   (inside update())
         .mockResolvedValueOnce(sampleMovie)
-      // 3) duplicate‑check for *new* title
+        // 3) duplicate‑check for *new* title
         .mockResolvedValueOnce(null);
 
       repo.save.mockResolvedValueOnce({ ...sampleMovie, title: 'New' });
@@ -91,14 +100,14 @@ describe('MoviesService (unit)', () => {
         .mockResolvedValueOnce(sampleMovie) // by old title
         .mockResolvedValueOnce(sampleMovie) // by id
         .mockResolvedValueOnce({
-            id: 2,
-            title: 'New',
-            genre: 'Drama',
-            duration: 120,
-            rating: 7.5,
-            releaseYear: 2011,
-            showtimes: [],
-          } as Movie); // duplicate title
+          id: 2,
+          title: 'New',
+          genre: 'Drama',
+          duration: 120,
+          rating: 7.5,
+          releaseYear: 2011,
+          showtimes: [],
+        } as Movie); // duplicate title
 
       await expect(
         service.updateByTitle('Inception', { title: 'New' }),
@@ -109,8 +118,9 @@ describe('MoviesService (unit)', () => {
   describe('deleteByTitle()', () => {
     it('returns 404 when title not found', async () => {
       repo.findOneBy.mockResolvedValueOnce(null);
-      await expect(service.deleteByTitle('None'))
-        .rejects.toBeInstanceOf(NotFoundException);
+      await expect(service.deleteByTitle('None')).rejects.toBeInstanceOf(
+        NotFoundException,
+      );
     });
 
     it('deletes movie successfully', async () => {

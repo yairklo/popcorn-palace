@@ -16,7 +16,6 @@ import { CreateTicketDto } from './dto/tickets.dto';
 export class TicketsController {
   constructor(private readonly TicketsService: TicketsService) {}
 
-
   @Post()
   @HttpCode(200)
   create(@Body() ticket: CreateTicketDto) {

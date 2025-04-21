@@ -31,7 +31,6 @@ export class MoviesController {
     return this.moviesService.findAll();
   }
 
-
   @Post('update/:title')
   @HttpCode(200)
   updateByTitle(@Param('title') title: string, @Body() dto: UpdateMovieDto) {

@@ -33,7 +33,9 @@ export class ShowtimesService {
   }
 
   async findById(id: string) {
-    const showtime = await this.showtimeRepository.findOneBy({ id: Number(id) });
+    const showtime = await this.showtimeRepository.findOneBy({
+      id: Number(id),
+    });
     if (!showtime) {
       throw new NotFoundException(`Showtime with ID ${id} not found`);
     }

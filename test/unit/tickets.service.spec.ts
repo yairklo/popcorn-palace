@@ -25,7 +25,7 @@ describe('TicketsService (unit)', () => {
         TicketsService,
         { provide: getRepositoryToken(Ticket), useValue: repoMock() },
         { provide: getRepositoryToken(Showtime), useValue: repoMock() },
-        { provide: ShowtimesService,            useValue: { findById: jest.fn() } },
+        { provide: ShowtimesService, useValue: { findById: jest.fn() } },
       ],
     }).compile();
 

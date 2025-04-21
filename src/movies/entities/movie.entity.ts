@@ -1,5 +1,11 @@
 import { Showtime } from 'src/showtimes/entities/showtime.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  Unique,
+} from 'typeorm';
 
 @Entity()
 @Unique(['title'])

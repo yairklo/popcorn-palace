@@ -5,10 +5,9 @@ export class CreateTicketDto {
   showtimeId: number;
 
   @IsString()
-  userId: string
+  userId: string;
 
   @IsNumber()
   @Min(1)
   seatNumber: number;
 }
-

@@ -21,9 +21,9 @@ export function validateReleaseYear(movie: Partial<Movie>) {
 }
 
 export async function validateMovieTitleUniqueness(
-  repo: Repository<Movie>, 
+  repo: Repository<Movie>,
   title: string,
-  currentId?: number
+  currentId?: number,
 ) {
   const existing = await repo.findOneBy({ title });
   if (existing && existing.id !== currentId) {

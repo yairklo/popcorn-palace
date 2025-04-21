@@ -26,7 +26,6 @@ export class ShowtimesController {
     return this.showtimesService.create(createShowtimeDto);
   }
 
-
   @Post('update/:id')
   @HttpCode(200)
   updatePost(@Param('id') id: string, @Body() dto: UpdateShowtimeDto) {
