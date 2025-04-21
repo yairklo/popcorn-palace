@@ -33,13 +33,13 @@ export class ShowtimesService {
   }
 
   async findById(id: string) {
-    const showtime = await this.movieRepository.findOneBy({ id: Number(id) });
+    const showtime = await this.showtimeRepository.findOneBy({ id: Number(id) });
     if (!showtime) {
       throw new NotFoundException(`Showtime with ID ${id} not found`);
     }
     return this.showtimeRepository.findOne({
       where: { id: Number(id) },
-      relations: ['theater', 'movie'],
+      relations: ['movie'],
     });
   }
 
@@ -50,7 +50,6 @@ export class ShowtimesService {
     }
     return this.showtimeRepository.find({
       where: { movie: { id: movieId } },
-      relations: ['theater'],
     });
   }
 

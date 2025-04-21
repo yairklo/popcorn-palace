@@ -24,6 +24,9 @@ export class TicketsService {
     const showtime = await this.ShowtimeRepository.findOneBy({
       id: ticket.showtimeId,
     });
+    if (!showtime) {
+      throw new NotFoundException(`Showtime with ID ${ticket.showtimeId} not found`);
+    }
     const exists = await this.TicketRepository.findOne({
       where: {
         showtime: { id: ticket.showtimeId },
@@ -54,7 +57,7 @@ export class TicketsService {
       bookingId: Number(id),
     });
     if (!exists) {
-      throw new NotFoundException(`Theater with ID ${id} not found`);
+      throw new NotFoundException(`Ticket with ID ${id} not found`);
     }
     return this.TicketRepository.delete(id);
   }

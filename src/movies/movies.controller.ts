@@ -27,35 +27,17 @@ export class MoviesController {
   }
 
   @Get('all')
-  @Get()
   findAll() {
     return this.moviesService.findAll();
   }
 
-  @Get()
-  findById() {}
-
-  @Get(':id/showtimes')
-  getShowtimesForMovie(@Param('id', ParseIntPipe) movieId: number) {
-    return this.showtimesService.findByMovieId(movieId);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateMovieDto: UpdateMovieDto) {
-    return this.moviesService.update(id, updateMovieDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.moviesService.remove(id);
-  }
 
   @Post('update/:title')
+  @HttpCode(200)
   updateByTitle(@Param('title') title: string, @Body() dto: UpdateMovieDto) {
     return this.moviesService.updateByTitle(title, dto);
   }
 
-  // Legacy: Delete by movie title
   @Delete(':title')
   deleteByTitle(@Param('title') title: string) {
     return this.moviesService.deleteByTitle(title);

@@ -20,24 +20,12 @@ export class ShowtimesController {
     return this.showtimesService.findById(id);
   }
 
-  @Get()
-  findAll() {
-    return this.showtimesService.findAll();
-  }
-
   @Post()
   @HttpCode(200)
   create(@Body() createShowtimeDto: CreateShowtimeDto) {
     return this.showtimesService.create(createShowtimeDto);
   }
 
-  @Put(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateShowtimeDto: UpdateShowtimeDto,
-  ) {
-    return this.showtimesService.update(id, updateShowtimeDto);
-  }
 
   @Post('update/:id')
   @HttpCode(200)

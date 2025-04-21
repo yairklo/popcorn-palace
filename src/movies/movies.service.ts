@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Movie } from './entities/movie.entity';
 import { CreateMovieDto, UpdateMovieDto } from './dto/movie.dto';
 import {
   validateMovieDuration,
+  validateMovieTitleUniqueness,
   validateReleaseYear,
 } from './utils/movie-validation';
 
@@ -15,7 +16,8 @@ export class MoviesService {
     private movieRepository: Repository<Movie>,
   ) {}
 
-  create(movie: CreateMovieDto) {
+  async create(movie: CreateMovieDto) {
+    await validateMovieTitleUniqueness(this.movieRepository, movie.title);
     validateMovieDuration(movie);
     validateReleaseYear(movie);
     const newMovie = this.movieRepository.create(movie);
@@ -30,6 +32,9 @@ export class MoviesService {
     const exists = await this.movieRepository.findOneBy({ id: Number(id) });
     if (!exists) {
       throw new NotFoundException(`Movie with ID ${id} not found`);
+    }
+    if (movie.title && movie.title !== exists.title) {
+      await validateMovieTitleUniqueness(this.movieRepository, movie.title);
     }
 
     const updatedMovie = {
