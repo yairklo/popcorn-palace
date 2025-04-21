@@ -24,7 +24,7 @@ import { TicketsModule } from './tickets/tickets.module';
       database: process.env.DB_NAME,
       entities: [Movie, Showtime, Ticket],
       synchronize: true,
-      dropSchema: true,  
+      //dropSchema: true,  
     }),
 
     TypeOrmModule.forFeature([Showtime, Movie, Ticket]),
