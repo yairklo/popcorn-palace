@@ -1,39 +1,80 @@
-How to run build and test the project:
+Popcorn Palace – Quick Start Guide
 
-start Postgres in Docker:
-$ docker compose up -d  # uses compose.yml (DB on port 5432)
+Prerequisites
 
-## Running the app
+Node.js ≥ 18 & npm
 
-```bash
+Docker (for Postgres)
+
+0 · Environment file (.env)
+
+Create a file named .env in the project root before running any command:
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=popcorn-palace
+DB_PASSWORD=popcorn-palace
+DB_NAME=popcorn-palace
+
+(Feel free to tweak these if your local Postgres uses different credentials or port.)
+
+1 · Database
+
+docker compose up -d   # starts the Postgres service on :5432 defined in compose.yml
+
+2 · Install & Run
+
+npm install            # install deps
+
 # development
-$ npm run start
+npm run start          # localhost:3000
 
-# watch mode
-$ npm run start:dev
+# live‑reload
+npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
+# production (uses dist/)
+npm run start:prod
 
-## Test
+3 · Build for Production
 
-```bash
-# unit tests
-$ npm run test
+npm run build          # compile TS → dist/
+npm prune --production # keep only prod deps
+node dist/main.js      # or pm2 / Docker
 
-# e2e tests
-$ npm run test:e2e
+A minimal Dockerfile is included:
 
-# test coverage
-$ npm run test:cov
-```
+docker build -t popcorn-palace .
+docker run -p 3000:3000 popcorn-palace   # set DB_HOST env var if DB is external
 
-Building for Production:
+4 · Tests
 
-$ npm run build          # compiles TS → JS (dist/)
-$ npm prune --production  # install prod deps only
-$ node dist/main.js       # or use pm2 / docker
+# unit tests (Jest)
+npm run test
 
-A minimal Dockerfile is included – build with docker build -t popcorn-palace . and run docker run -p 3000:3000 popcorn-palace (expects an external Postgres DB or link a service under DB_HOST).
+# e2e tests (Jest + Supertest)
+npm run test:e2e
 
+# coverage report
+npm run test:cov
+
+5 · Adding More Jest Tests
+
+Purpose
+
+File pattern
+
+Location
+
+Unit / integration
+
+*.spec.ts
+
+test/unit or alongside source
+
+End‑to‑end (REST)
+
+*.e2e-spec.ts
+
+test/e2e
+
+New files matching those patterns are discovered automatically by the npm scripts above.
